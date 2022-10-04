@@ -48,7 +48,9 @@
 (defun echo-keys ()
   (let ((deactivate-mark deactivate-mark)
         (keys            (this-command-keys)))
-    (when (and keys (not *echo-key-password-disable*))
+    (when (and keys
+               (not (eq (current-buffer) (get-buffer "*echo-key*")))
+               (not *echo-key-password-disable*))
       (save-excursion
        (with-current-buffer (get-buffer-create "*echo-key*")
          (goto-char (point-max))
