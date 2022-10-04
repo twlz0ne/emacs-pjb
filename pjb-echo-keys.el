@@ -108,6 +108,8 @@
         (split-window nil (- (window-width) *echo-key-width*) t)
         (other-window 1)
         (switch-to-buffer (get-buffer-create "*echo-key*"))
+        (unless (eq major-mode 'echo-keys-mode)
+          (echo-keys-mode))
         (toggle-truncate-lines +1)
         (set-window-dedicated-p (selected-window) t)
         (other-window 1)
@@ -120,6 +122,22 @@
 (defadvice echo-key--read-passwd--enable (after read-passwd)
     (message "echo-key--read-passwd--enable")
   (setf *echo-key-password-disable* nil))
+
+(defun echo-keys-clean ()
+  "Erase the `*echo-key*' buffer."
+  (interactive)
+  (with-current-buffer "*echo-key*"
+    (erase-buffer)))
+
+(defvar echo-keys-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c l") #'echo-keys-clean)
+    map))
+
+(define-derived-mode echo-keys-mode fundamental-mode "Echo keys"
+  "Major mode for echo-keys.
+
+\\{echo-keys-mode-map}")
 
 (provide 'pjb-echo-keys)
 ;;;; THE END ;;;;
