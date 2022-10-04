@@ -49,10 +49,10 @@
   (let ((deactivate-mark deactivate-mark)
         (keys            (this-command-keys)))
     (when (and keys
-               (not (eq (current-buffer) (get-buffer "*echo-key*")))
+               (not (eq (current-buffer) (get-buffer "*echo-keys*")))
                (not *echo-key-password-disable*))
       (save-excursion
-       (with-current-buffer (get-buffer-create "*echo-key*")
+       (with-current-buffer (get-buffer-create "*echo-keys*")
          (goto-char (point-max))
          (if (eql this-command 'self-insert-command)
              (let ((desc (key-description keys)))
@@ -98,7 +98,7 @@
   "Toggle displaying the *echo-key* buffer."
   (interactive)
   (if (member 'echo-keys (default-value 'pre-command-hook))
-      (let ((echo-buffer (get-buffer "*echo-key*")))
+      (let ((echo-buffer (get-buffer "*echo-keys*")))
         (remove-hook 'pre-command-hook 'echo-keys)
         (dolist (window (window-list))
           (when (eq (window-buffer window) echo-buffer)
@@ -107,7 +107,7 @@
         (delete-other-windows)
         (split-window nil (- (window-width) *echo-key-width*) t)
         (other-window 1)
-        (switch-to-buffer (get-buffer-create "*echo-key*"))
+        (switch-to-buffer (get-buffer-create "*echo-keys*"))
         (unless (eq major-mode 'echo-keys-mode)
           (echo-keys-mode))
         (toggle-truncate-lines +1)
@@ -124,9 +124,9 @@
   (setf *echo-key-password-disable* nil))
 
 (defun echo-keys-clean ()
-  "Erase the `*echo-key*' buffer."
+  "Erase the `*echo-keys*' buffer."
   (interactive)
-  (with-current-buffer "*echo-key*"
+  (with-current-buffer "*echo-keys*"
     (erase-buffer)))
 
 (defvar echo-keys-mode-map
